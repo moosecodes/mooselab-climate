@@ -29,7 +29,7 @@ void loop()
   Serial.print("CELCIUS:");
   Serial.print(celcius);
   Serial.print(",FARENHEIT:");
-  Serial.println(farenheit);
-  Serial.print(",HUM:");
+  Serial.print(farenheit);
+  Serial.print(",HUMIDITY:");
   Serial.println(humidity);
 }
