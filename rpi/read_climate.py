@@ -18,11 +18,12 @@ try:
                     try:
                         # Split the line into temperature and humidity
                         data = line.split(",")
-                        temperature = float(data[0].split(":")[1])
-                        humidity = float(data[1].split(":")[1])
+                        celcius = float(data[0].split(":")[1])
+                        farenheit = float(data[1].split(":")[1])
+                        humidity = float(data[2].split(":")[1])
 
                         # Print parsed data
-                        print(f"c: {temperature}, hum: {humidity}")
+                        print(f"c: {celcius}, f: {farenheit},hum: {humidity}")
                     except (IndexError, ValueError):
                         print("Error parsing data")
             except UnicodeDecodeError:
