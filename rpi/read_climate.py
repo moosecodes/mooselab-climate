@@ -22,8 +22,11 @@ try:
                     humidity = float(data[1].split(":")[1])
 
                     # Print parsed data
-                    print(f"Temperature: {
-                          temperature} °C, Humidity: {humidity} %")
+                    print(
+                        f"Temperature: {temperature} °C, "
+                        f"Humidity: {humidity} %"
+                    )
+
                 except (IndexError, ValueError):
                     print("Error parsing data")
         else:
