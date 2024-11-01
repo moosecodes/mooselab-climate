@@ -1,10 +1,9 @@
 import serial
 import time
 
-arduino_port = '/dev/ttyusbmodem1101'  # Replace with your actual Arduino port
-baud_rate = 9600
-ser = serial.Serial(arduino_port, baud_rate)
-time.sleep(2)  # Allow some time for the connection to establish
+# Set up the serial connection (use '/dev/serial0' for GPIO serial communication)
+ser = serial.Serial('/dev/serial0', 9600, timeout=1)
+time.sleep(2)  # Wait for connection to establish
 
 try:
     while True:
