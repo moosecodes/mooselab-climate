@@ -5,18 +5,21 @@
 
 DHT dht(DHTPIN, DHTTYPE);
 
-void setup() {
+void setup()
+{
   Serial.begin(9600); // Initialize serial communication
   dht.begin();        // Initialize DHT sensor
 }
 
-void loop() {
+void loop()
+{
   delay(2000);
 
   float temperature = dht.readTemperature();
   float humidity = dht.readHumidity();
 
-  if (isnan(temperature) || isnan(humidity)) {
+  if (isnan(temperature) || isnan(humidity))
+  {
     Serial.println("Failed to read from DHT sensor!");
     return;
   }
