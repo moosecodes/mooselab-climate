@@ -2,13 +2,16 @@ import serial
 import mysql.connector
 import time
 from mysql.connector import Error
+from gpiozero import LED
+from time import sleep
 
 # Set the correct serial port for the Arduino Leonardo
 serial_port = '/dev/ttyACM0'
 baud_rate = 9600
+led = LED(21)
 
 # Connect to the Arduino
-ser = serial.Serial(serial_port, baud_rate, timeout=60000)
+ser = serial.Serial(serial_port, baud_rate)
 
 # Database connection settings
 db_config = {
@@ -19,25 +22,28 @@ db_config = {
 }
 
 # Function to insert data into the database
-def insert_reading(celcius, farenheit, humidity):
+def insert_reading(farenheit, celsius, humidity):
+    led.on()
     try:
         # Establish the database connection
         connection = mysql.connector.connect(**db_config)
         if connection.is_connected():
             cursor = connection.cursor()
-            # Insert data into the readings table
-            insert_query = "INSERT INTO readings (celcius, farenheit, humidity) VALUES (%s, %s, %s)"
-            cursor.execute(insert_query, (celcius, farenheit, humidity))
+            insert_query = "INSERT INTO readings (farenheit, celsius, humidity) VALUES (%s, %s, %s)"
+            cursor.execute(insert_query, (farenheit, celsius, humidity))
             connection.commit()
-            print(f"Inserted: {celcius} °C, {farenheit} °F, {humidity} %")
+            
+            print(f"Inserted --> {farenheit} °F, {celsius} °C, {humidity} %")
     except Error as e:
         print(f"Error: {e}")
     finally:
         if connection.is_connected():
             cursor.close()
             connection.close()
+            led.off()
 
 # Main loop
+print("\nStarting...\n")
 try:
     while True:
         if ser.in_waiting > 0:
@@ -46,15 +52,15 @@ try:
             
             climate_data = line.split(',')
 
-            celcius = float(climate_data[0].split(':')[1])
-            farenheit = float(climate_data[1].split(':')[1])
+            farenheit = float(climate_data[0].split(':')[1])
+            celsius = float(climate_data[1].split(':')[1])
             humidity = float(climate_data[2].split(':')[1])
 
             # Save to database
-            insert_reading(celcius, farenheit, humidity)
+            insert_reading(farenheit, celsius, humidity)
 
-            time.sleep(60)
+            time.sleep(30)
 except KeyboardInterrupt:
-    print("Exiting...")
+    print("\nExiting...\n")
 finally:
     ser.close()
