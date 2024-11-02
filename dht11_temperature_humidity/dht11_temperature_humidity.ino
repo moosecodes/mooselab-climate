@@ -2,6 +2,7 @@
 
 #define DHTTYPE DHT11
 #define DHTPIN 2
+#define SLEEP_DELAY 5000
 
 DHT dht(DHTPIN, DHTTYPE);
 
@@ -36,5 +37,5 @@ void loop()
   
   digitalWrite(LED_BUILTIN, LOW);
   
-  delay(15000);
+  delay(SLEEP_DELAY);
 }

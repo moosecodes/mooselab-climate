@@ -3,7 +3,7 @@ import mysql.connector
 import time
 from mysql.connector import Error
 from gpiozero import LED
-from time import sleep
+# from time import sleep
 
 # Set the correct serial port for the Arduino Leonardo
 serial_port = '/dev/ttyACM0'
@@ -34,6 +34,7 @@ def insert_reading(farenheit, celsius, humidity):
             connection.commit()
             
             print(f"Inserted --> {farenheit} °F, {celsius} °C, {humidity} %")
+            
     except Error as e:
         print(f"Error: {e}")
     finally:
@@ -58,8 +59,6 @@ try:
 
             # Save to database
             insert_reading(farenheit, celsius, humidity)
-
-            time.sleep(30)
 except KeyboardInterrupt:
     print("\nExiting...\n")
 finally:
