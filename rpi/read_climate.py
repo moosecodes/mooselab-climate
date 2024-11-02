@@ -1,9 +1,10 @@
+## Python Script Running on Raspberry Pi
+
 import serial
 import mysql.connector
 import time
 from mysql.connector import Error
 from gpiozero import LED
-# from time import sleep
 
 # Set the correct serial port for the Arduino Leonardo
 serial_port = '/dev/ttyACM0'
@@ -16,8 +17,8 @@ ser = serial.Serial(serial_port, baud_rate)
 # Database connection settings
 db_config = {
     'host': 'localhost',
-    'user': 'your_username',
-    'password': 'your_password',
+    'user': 'rpidbuser',
+    'password': 'a',
     'database': 'weather_data'
 }
 

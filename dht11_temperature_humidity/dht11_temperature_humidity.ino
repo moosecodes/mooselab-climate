@@ -1,3 +1,5 @@
+// Arduino Language
+
 #include <DHT.h>
 
 #define DHTTYPE DHT11

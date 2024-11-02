@@ -2,15 +2,35 @@
 
 ### Initial setup
 
-- upload code to arduino
+- Upload code to Arduino
 - Wire up the arduino
-- Wire up the rpi
-- plug in USB serial cable from arduino to rpi
-- sudo raspi-config on rpi terminal
+- Wire up the Raspberry Pi (rpi)
+- Plug in USB serial cable from arduino to rpi
+- run `sudo raspi-config` on rpi terminal
 - enable rpi serial connection (say no to remote console log in when doing this setup)
-- (optional) enable rpi VNC
+- (optional) enable rpi VNC via `raspi-config`
 - (optional) disable boot to desktop
-- install DHT sensor library via Arduino IDE through Manage Extensions
+- install `DHT sensor library` via Arduino IDE through `Manage Extensions`
+- Expand rpi filesystem through `raspi-config`
+- Install `nodejs` apt package
+- Install `npm`
+- (optional) Install `nvm` via `npm`
+
+``` bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+```
+
+=> Appending nvm source string to /home/moose/.bashrc
+=> Appending bash_completion source string to /home/moose/.bashrc
+=> Close and reopen your terminal to start using nvm or run the following to use it now:
+
+### Add to bash profile or oh my zsh profile:
+
+``` bash
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+```
 
 ### On RPi console:
 ``` bash
@@ -70,14 +90,26 @@ CREATE TABLE readings (
     farenheit FLOAT NOT NULL,
     celsius FLOAT NOT NULL,
     humidity FLOAT NOT NULL,
-    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
+-- User access is from localhost only
 CREATE USER 'your_username'@'localhost' IDENTIFIED BY 'your_password';
 
+-- User access from any host
+CREATE USER 'your_username'@'%' IDENTIFIED BY 'your_password';
+
+-- For connections from only localhost
 GRANT SELECT, INSERT, UPDATE, DELETE ON weather_data.* TO 'your_username'@'localhost';
 
+-- For connections from any host
+GRANT SELECT, INSERT, UPDATE, DELETE ON weather_data.* TO 'your_username'@'%';
+
+-- Grant Privileges to new user for localhost
 GRANT ALL PRIVILEGES ON weather_data.* TO 'your_username'@'localhost';
+
+-- Alternative for all hosts
+GRANT ALL PRIVILEGES ON weather_data.* TO 'your_username'@'%';
 
 FLUSH PRIVILEGES;
 
@@ -95,4 +127,16 @@ db_config = {
     'password': 'your_password',  # the MariaDB password
     'database': 'weather_data'  # the correct database name
 }
+```
+
+### Uncomplicated Firewall (UFW)
+``` bash
+sudo ufw allow ssh               # Allow SSH for remote access
+sudo ufw allow http              # Allow HTTP for web traffic
+sudo ufw allow https             # Allow HTTPS for secure web traffic
+sudo ufw allow 3306/tcp          # Allow MySQL/MariaDB if needed
+sudo ufw allow 5900              # Allow VNC if needed
+sudo ufw default deny incoming   # Deny all other incoming connections
+sudo ufw default allow outgoing  # Allow all outgoing connections
+sudo ufw enable                  # Enable the firewall (this persists across reboots)
 ```
