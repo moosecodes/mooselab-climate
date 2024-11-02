@@ -1,4 +1,6 @@
-Initial setup
+# MooseLab Climate Monitor
+
+### Initial setup
 
 - upload code to arduino
 - Wire up the arduino
