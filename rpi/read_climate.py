@@ -1,39 +1,60 @@
 import serial
+import mysql.connector
 import time
+from mysql.connector import Error
 
-# Set up the serial connection (use '/dev/ttyACM0' for GPIO serial communication)
-ser = serial.Serial('/dev/ttyACM0', 9600, timeout=60)
-time.sleep(2)  # Wait for connection to establish
+# Set the correct serial port for the Arduino Leonardo
+serial_port = '/dev/ttyACM0'
+baud_rate = 9600
 
+# Connect to the Arduino
+ser = serial.Serial(serial_port, baud_rate, timeout=60000)
+
+# Database connection settings
+db_config = {
+    'host': 'localhost',
+    'user': 'your_username',
+    'password': 'your_password',
+    'database': 'weather_data'
+}
+
+# Function to insert data into the database
+def insert_reading(celcius, farenheit, humidity):
+    try:
+        # Establish the database connection
+        connection = mysql.connector.connect(**db_config)
+        if connection.is_connected():
+            cursor = connection.cursor()
+            # Insert data into the readings table
+            insert_query = "INSERT INTO readings (celcius, farenheit, humidity) VALUES (%s, %s, %s)"
+            cursor.execute(insert_query, (celcius, farenheit, humidity))
+            connection.commit()
+            print(f"Inserted: {celcius} °C, {farenheit} °F, {humidity} %")
+    except Error as e:
+        print(f"Error: {e}")
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+
+# Main loop
 try:
     while True:
-        if ser.in_waiting > 0:  # Check if there is incoming data
-            raw_line = ser.readline()  # Read raw bytes
-            try:
-                line = raw_line.decode('utf-8').strip()  # Decode and strip whitespace
+        if ser.in_waiting > 0:
+            # Read the data from the serial port
+            line = ser.readline().decode('utf-8').strip()
+            
+            climate_data = line.split(',')
 
-                # Check if the line starts with 'CELCIUS:' to ensure valid data format
-                if line.startswith("CELCIUS:"):
-                    try:
-                        # Split the line into temperature and humidity
-                        data = line.split(",")
-                        celcius = float(data[0].split(":")[1])
-                        farenheit = float(data[1].split(":")[1])
-                        humidity = float(data[2].split(":")[1])
-                        
-                        # Print parsed data
-                        print(f"celcius: {celcius}, farenheit: {farenheit}, humidity: {humidity}")
-                        
-                        # TODO: Save data to database
+            celcius = float(climate_data[0].split(':')[1])
+            farenheit = float(climate_data[1].split(':')[1])
+            humidity = float(climate_data[2].split(':')[1])
 
-                    except (IndexError, ValueError):
-                        print("Error parsing data")
-            except UnicodeDecodeError:
-                print("Received non-UTF-8 data, skipping...")
-        else:
-            time.sleep(0.2)  # Short delay to avoid busy waiting
+            # Save to database
+            insert_reading(celcius, farenheit, humidity)
+
+            time.sleep(60)
 except KeyboardInterrupt:
-    print("Exiting program.")
+    print("Exiting...")
 finally:
     ser.close()
-
