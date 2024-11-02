@@ -27,15 +27,20 @@ void loop()
     return;
   }
 
-  // Send data
-  Serial.print("FARENHEIT:");
-  Serial.print(farenheit);
-  Serial.print(", CELSIUS:");
-  Serial.print(celsius);
-  Serial.print(", HUMIDITY:");
-  Serial.println(humidity);
+  send_serial_data(farenheit, celsius, humidity);
   
   digitalWrite(LED_BUILTIN, LOW);
   
   delay(SLEEP_DELAY);
+}
+
+void send_serial_data(float f, float c, float h)
+{
+  // Send data
+  Serial.print("FARENHEIT:");
+  Serial.print(f);
+  Serial.print(", CELSIUS:");
+  Serial.print(c);
+  Serial.print(", HUMIDITY:");
+  Serial.println(h);
 }
