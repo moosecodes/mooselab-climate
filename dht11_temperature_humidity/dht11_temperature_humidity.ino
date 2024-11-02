@@ -28,8 +28,9 @@ void loop()
   // Send data in "TEMP:xx.x,HUM:yy.y" format
   Serial.print("CELCIUS:");
   Serial.print(celcius);
-  Serial.print(",FARENHEIT:");
+  Serial.print(", FARENHEIT:");
   Serial.print(farenheit);
-  Serial.print(",HUMIDITY:");
+  Serial.print(", HUMIDITY:");
   Serial.println(humidity);
+  delay(60000);
 }
