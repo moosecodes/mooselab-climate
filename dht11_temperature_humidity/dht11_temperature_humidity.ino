@@ -4,7 +4,7 @@
 
 #define DHTTYPE DHT11
 #define DHTPIN 2
-#define SLEEP_DELAY 5000
+#define ONE_MINUTE 60000
 
 DHT dht(DHTPIN, DHTTYPE);
 
@@ -33,7 +33,7 @@ void loop()
   
   digitalWrite(LED_BUILTIN, LOW);
   
-  delay(SLEEP_DELAY);
+  delay(ONE_MINUTE * 2);
 }
 
 void send_serial_data(float f, float c, float h)
