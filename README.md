@@ -135,6 +135,7 @@ sudo ufw allow ssh               # Allow SSH for remote access
 sudo ufw allow http              # Allow HTTP for web traffic
 sudo ufw allow https             # Allow HTTPS for secure web traffic
 sudo ufw allow 3306/tcp          # Allow MySQL/MariaDB if needed
+sudo ufw allow 5000              # Allow express server
 sudo ufw allow 5900              # Allow VNC if needed
 sudo ufw default deny incoming   # Deny all other incoming connections
 sudo ufw default allow outgoing  # Allow all outgoing connections

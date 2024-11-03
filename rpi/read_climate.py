@@ -2,9 +2,11 @@
 
 import serial
 import mysql.connector
-import time
+
+from db_config import db_config, insert_query
 from mysql.connector import Error
 from gpiozero import LED
+
 
 # Set the correct serial port for the Arduino Leonardo
 serial_port = '/dev/ttyACM0'
@@ -14,14 +16,6 @@ led = LED(21)
 # Connect to the Arduino
 ser = serial.Serial(serial_port, baud_rate)
 
-# Database connection settings
-db_config = {
-    'host': 'localhost',
-    'user': 'rpidbuser',
-    'password': 'a',
-    'database': 'weather_data'
-}
-
 # Function to insert data into the database
 def insert_reading(farenheit, celsius, humidity):
     led.on()
@@ -30,7 +24,6 @@ def insert_reading(farenheit, celsius, humidity):
         connection = mysql.connector.connect(**db_config)
         if connection.is_connected():
             cursor = connection.cursor()
-            insert_query = "INSERT INTO readings (farenheit, celsius, humidity) VALUES (%s, %s, %s)"
             cursor.execute(insert_query, (farenheit, celsius, humidity))
             connection.commit()
             
