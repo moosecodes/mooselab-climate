@@ -93,6 +93,24 @@ CREATE TABLE readings (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
+
+-- Create a database
+CREATE DATABASE local_weather_data;
+
+-- Create a table for storing temperature and humidity
+CREATE TABLE local_readings (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    farenheit FLOAT NOT NULL,
+    feels_like FLOAT NOT NULL,
+    temp_min FLOAT NOT NULL,
+    temp_max FLOAT NOT NULL,
+    humidity FLOAT NOT NULL,
+    name VARCHAR(255),
+    conditions VARCHAR(255),
+    description VARCHAR(255),
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
 -- User access is from localhost only
 CREATE USER 'your_username'@'localhost' IDENTIFIED BY 'your_password';
 

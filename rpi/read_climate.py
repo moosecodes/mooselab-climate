@@ -2,9 +2,9 @@
 
 import serial
 import mysql.connector
-
-from db_config import db_config, insert_query
 from mysql.connector import Error
+
+from db_config import db_config, insert_dht11_query
 from gpiozero import LED
 
 
@@ -16,15 +16,15 @@ led = LED(21)
 # Connect to the Arduino
 ser = serial.Serial(serial_port, baud_rate)
 
-# Function to insert data into the database
-def insert_reading(farenheit, celsius, humidity):
+# Function to insert data into the database via the temperature sensor
+def insert_dht11_reading(farenheit, celsius, humidity):
     led.on()
     try:
         # Establish the database connection
         connection = mysql.connector.connect(**db_config)
         if connection.is_connected():
             cursor = connection.cursor()
-            cursor.execute(insert_query, (farenheit, celsius, humidity))
+            cursor.execute(insert_dht11_query, (farenheit, celsius, humidity))
             connection.commit()
             
             print(f"Inserted --> {farenheit} °F, {celsius} °C, {humidity} %")
@@ -52,7 +52,7 @@ try:
             humidity = float(climate_data[2].split(':')[1])
 
             # Save to database
-            insert_reading(farenheit, celsius, humidity)
+            insert_dht11_reading(farenheit, celsius, humidity)
 except KeyboardInterrupt:
     print("\nExiting...\n")
 finally:
