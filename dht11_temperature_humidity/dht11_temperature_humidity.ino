@@ -33,7 +33,7 @@ void loop()
   
   digitalWrite(LED_BUILTIN, LOW);
   
-  delay(2000);
+  delay(ONE_MINUTE * 10);
 }
 
 void send_serial_data(float f, float c, float h)
