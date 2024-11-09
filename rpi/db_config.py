@@ -5,4 +5,4 @@ db_config = {
     'database': 'weather_data'
 }
 
-insert_dht11_query = "INSERT INTO readings (farenheit, celsius, humidity) VALUES (%s, %s, %s)"
+insert_dht11_query = "INSERT INTO weather_data.readings (farenheit, celsius, humidity) VALUES (%s, %s, %s)"
